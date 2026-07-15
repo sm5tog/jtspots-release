@@ -1,0 +1,193 @@
+{
+  "rules": [
+    {
+      "id": "447723.4211856",
+      "name": "ATNO",
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "atno",
+          "value": ""
+        },
+        {
+          "type": "qrz_verified",
+          "value": ""
+        }
+      ],
+      "trigger_on_wkd": true
+    },
+    {
+      "id": "442287.1657476",
+      "name": "BL CW",
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "new_band",
+          "value": ""
+        },
+        {
+          "type": "band",
+          "value": "80,60,40,30,20,17,15,12,10,6"
+        },
+        {
+          "type": "spotter_dxcc",
+          "value": "sm, oh, la, ly, yl, sp, dl, oz, oy, es"
+        },
+        {
+          "type": "mode",
+          "value": "CW"
+        },
+        {
+          "type": "qrz_verified",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "473709.5722343",
+      "name": "BL FT",
+      "enabled": true,
+      "trigger_on_wkd": true,
+      "conditions": [
+        {
+          "type": "new_band",
+          "value": ""
+        },
+        {
+          "type": "mode",
+          "value": "FT8,FT4"
+        },
+        {
+          "type": "spotter_dxcc",
+          "value": "sm, oh, la, ly, yl, sp, dl, oz, oy, es"
+        },
+        {
+          "type": "band",
+          "value": "160,80,60,40,30,20,17,15,12,10,6"
+        },
+        {
+          "type": "qrz_verified",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "473850.4738",
+      "name": "BL SSB",
+      "enabled": true,
+      "trigger_on_wkd": true,
+      "conditions": [
+        {
+          "type": "new_band",
+          "value": ""
+        },
+        {
+          "type": "mode",
+          "value": "SSB,FM"
+        },
+        {
+          "type": "spotter_dxcc",
+          "value": "sm, oh, la, ly, yl, sp, dl, oz, oy, es"
+        },
+        {
+          "type": "band",
+          "value": "160,80,60,40,30,20,17,15,12,10,6,2,QO100"
+        }
+      ]
+    },
+    {
+      "id": "446647.4521959",
+      "name": "DX",
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "wanted_call",
+          "value": "3B9HR,8R1TM,C21TS,CG2C,D73G,E51CZZ,E51KEE,F6BCW,HB040A,IZ3KVD,JK1HFB,K4T,KV1J,LU1DMZ,OX3LX,R3CN,R8KAM,RA8CV,RI0BU,RI0BW,RT9K,S50B,T22TT,TK5SI,TY5FR,UA1QV,UA6EX,UA9KDF,VP5G,VU4R,VY0ERC,YR50NADIA"
+        },
+        {
+          "type": "spotter_dxcc",
+          "value": "la, sm, oh, es, yl, ly, sp, dl, oz, oy, oh0"
+        },
+        {
+          "type": "wanted_call",
+          "value": "VK9DX",
+          "manual": true
+        }
+      ],
+      "trigger_on_wkd": true
+    },
+    {
+      "id": "448743.7411141",
+      "name": "QO",
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "sat_needed",
+          "value": ""
+        },
+        {
+          "type": "band",
+          "value": "QO100"
+        }
+      ]
+    },
+    {
+      "id": "449686.3010933",
+      "name": "MTH",
+      "enabled": true,
+      "conditions": [
+        {
+          "type": "marathon",
+          "value": "any"
+        },
+        {
+          "type": "spotter_dxcc",
+          "value": "sm, oh, la, oz, ly, es, dl, oy, oh0, yl, sp"
+        },
+        {
+          "type": "qrz_verified",
+          "value": ""
+        }
+      ],
+      "trigger_on_wkd": true
+    },
+    {
+      "id": "471343.7693638",
+      "name": "WAS",
+      "enabled": true,
+      "trigger_on_wkd": true,
+      "conditions": [
+        {
+          "type": "was_needed",
+          "value": ""
+        },
+        {
+          "type": "spotter_dxcc",
+          "value": "la, sm, oh, es, yl, ly, sp, dl, oz"
+        }
+      ]
+    },
+    {
+      "id": "389164.376498",
+      "name": "SC",
+      "enabled": false,
+      "conditions": [
+        {
+          "type": "wanted_call",
+          "value": "9A10SOTA,9A44FF,9A69AA,AT90VANI,CT100REP,DA100TV,DA200GVN,DB100FT,DB70DLRS,DF26FIFA,DL0SOP,DL0WRTC,DL25WIKI,DM50GFS,DQ30GDXF,DQ40CNP,DR170TESLA,EM50AR,GB13COL,GB26WRTC,GB50PUNK,HB200LF,II0NRG,II4JAFL,LY100RADIO,LZ67PP,LZ75HSC,OT26B,PA50JT,PG75HSC,SN93LOT,SP1183JO,TM13COL,YR100RC,YT170TESLA,ZL100AA,ZL100C"
+        }
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "name": "SK4BW",
+      "host": "cluster.sk4bw.net",
+      "port": "8000",
+      "callsign": "",
+      "password": "",
+      "init": "<CALLSIGN>\n<PASSWORD>\nSH/DX 30",
+      "autoconnect": false
+    }
+  ]
+}
