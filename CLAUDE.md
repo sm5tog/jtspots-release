@@ -12,6 +12,8 @@ Källkoden ligger i `C:\claude\git\jtspots\` (repo `sm5tog/jtspots`), som är **
 
 Bygg om och publicera en ny release **bara när användaren uttryckligen säger att det är dags** — inte automatiskt vid varje ny version i källkodsrepot. Detta är ett medvetet val (bekräftat 2026-07-15): "vi ska jobba som vanligt med python. exe-filsuppdatering sker bara när jag säger att det är dags."
 
+**KRITISKT (skärpt 2026-07-15 efter en överträdelse samma dag):** ett brett "kör allt"/"kör"-godkännande för kod-/config-ändringar i källkodsrepot ger INTE klartecken att också bygga om och releasa exe:n — det är ETT SEPARAT steg som kräver sin EGEN uttryckliga begäran ("bygg exe", "dags att uppdatera exe:n" e.d.), oavsett hur brett det tidigare godkännandet var formulerat. Anledningen är inte bara "invänta godkännande"-principen i sig, utan en konkret kostnad: att bygga+testa+paketera+releasa en exe innan de underliggande funktionerna ens hunnit provköras lokalt (i vanlig `python jtspots.py`-körning) slösar bort ett helt PyInstaller-byggpass + test + release i onödan om något behöver ändras efter den lokala provkörningen. Vänta alltså tills användaren SJÄLV har kört/testat ändringarna lokalt OCH uttryckligen bett om en ny exe-release, innan `pyinstaller`/`gh release create` körs igen.
+
 När uppmaningen kommer:
 1. `python -m py_compile jtspots.py` i källkodsrepot (redan gjort som en del av vanligt jtspots-arbete, men dubbelkolla).
 2. Bygg med PyInstaller, `--onedir --windowed --noconfirm --clean`, `--hidden-import pymysql --hidden-import websocket --hidden-import win32com.client` (dessa är lazy imports i källkoden — PyInstaller hittar dem annars inte via statisk analys, se jtspots/DOCUMENTATION.md).
