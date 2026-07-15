@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.17.77 | Operator: SM5K / SM5TOG
+Version covered: 1.17.78 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -43,6 +43,15 @@ separate runtime to set up.
 Double-click `JTSpots.exe` to start the program. All settings, caches,
 and logs are created automatically inside the same folder on first run —
 nothing needs to be created by hand.
+
+JTSpots ships with a ready-to-use starting point: a working rule set
+(ATNO, new band-country, WAS, DX Marathon, and a few example wanted-call
+rules — see §5) and one preconfigured DX cluster server (**SK4BW**,
+`cluster.sk4bw.net:8000`). Fill in your own callsign in Config → DX
+Cluster before connecting to it — the callsign field ships blank on
+purpose, so you don't accidentally connect as someone else. Feel free to
+edit, disable, or delete any of the starting rules to match your own
+station and interests.
 
 If you ever move JTSpots to a new folder, move the **entire folder**,
 not just the .exe — the data files it depends on (bandplan, DXCC
@@ -103,6 +112,15 @@ Choose how JTSpots controls your radio for click-to-tune: **TCI**,
 Switching the radio interface requires restarting JTSpots before the
 Spots tab's buttons update to match (the actual tuning target changes
 immediately, but the button layout only refreshes at startup).
+
+**RX2 (second receiver)** is optional, TCI-only. If your SDR only has one
+receiver, uncheck "Use RX2" — everything then tunes to your single
+receiver, and the RX1/RX2 choice disappears from the right-click menu and
+the rest of the UI. If you do have a second receiver (e.g. a SunSDR2 DUO),
+leave it checked and use the "RX per mode" row to choose which receiver
+each mode category (CW/Phone/Digital) tunes to by default — the built-in
+default sends CW/Phone to RX1 and Digital modes to RX2, matching common
+dual-receiver setups, but you can reassign any of the three.
 
 ### WSJT-X / QO-100
 
