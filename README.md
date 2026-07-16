@@ -24,6 +24,12 @@ installer, no admin rights needed.
 - WSJT-X/JTAlert and/or a DX cluster connection, if you want to use those
   spot sources
 
+## Quick start
+
+New here? **[QUICKSTART.md](QUICKSTART.md)** gets a fresh install
+receiving and forwarding spots in the shortest path, including the
+WSJT-X/JTAlert/Log4OM multicast setup.
+
 ## Full manual
 
 See **[MANUAL.md](MANUAL.md)** for installation details, every Config

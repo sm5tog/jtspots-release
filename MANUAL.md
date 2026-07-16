@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.17.84 | Operator: SM5K / SM5TOG
+Version covered: 1.17.86 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -57,6 +57,22 @@ If you ever move JTSpots to a new folder, move the **entire folder**,
 not just the .exe — the data files it depends on (bandplan, DXCC
 database, your settings and caches) live alongside it and are not
 bundled inside the executable itself.
+
+The window can be resized like any other — drag any edge or corner. The
+default size may cut off some log columns depending on your screen and
+font settings; widening the window is the fix, not a sign of something
+wrong with the data.
+
+### Updating
+
+When a newer version is available, a blue "Uppdatering: X.Y.Z" button
+appears in the status row at the top (checked once an hour automatically,
+no action needed to trigger the check). Click it to update — JTSpots
+closes itself and hands off to a small updater program that downloads and
+installs the new version, then restarts JTSpots for you. Your settings,
+rules, and cluster list are always preserved; you only lose them if you
+explicitly choose the "overwrite everything" recovery option the updater
+offers (for a corrupted installation), which is not the default.
 
 ### Folder layout
 
@@ -133,6 +149,18 @@ Multicast IP/port for WSJT-X's UDP broadcast, and a checkbox to enable
 the QO-100 poller (off by default). When enabled, JTSpots polls a public
 QO-100 WebSDR every 15 seconds for FT8/FT4 decodes and manual spots.
 
+> **These two fields must match WSJT-X's own settings exactly**, digit for
+> digit — not just "look similar". Open WSJT-X's own File → Settings →
+> Reporting tab and compare the "UDP Server" and "UDP Server port number"
+> fields there against Config → WSJT-X/QO-100 here. A mismatch (even a
+> single-digit port difference) means JTSpots simply never receives
+> anything from WSJT-X — nothing appears in the Alla log for that source,
+> and there is no error message, since nothing ever arrives to fail on.
+> The default in both places is `224.0.0.1` / `2237`; if you changed
+> WSJT-X's port for any reason (e.g. to share it with another program),
+> change it here too. See the quick-start guide for the full multicast
+> setup across WSJT-X, JTAlert, and Log4OM together.
+
 ### Rotor
 
 Your station's QTH grid locator (Maidenhead, e.g. `JO89CS`) and the
@@ -175,6 +203,14 @@ The Spots tab has four sub-views, shown as tabs of their own:
   (colored by DXCC/DXpedition/Marathon status).
 - **Skräp (Junk)** — spots rejected by the callsign/junk filter (see
   §10), so you can review and correct false positives.
+
+**Identifying where a spot came from:** every row ends with a bracketed
+source tag, e.g. `[WSJT-X]`, `[SK4BW]` (a DX cluster server name),
+`[Hamalert]`, or `[QO100]`. This is the quickest way to confirm a
+particular source is actually feeding spots in — if you've just set up
+WSJT-X's multicast connection and want to check it's working, look for
+`[WSJT-X]` rows appearing in Alla as new decodes come in, rather than
+guessing from the rest of the line.
 
 Right-clicking a spot row (in Alla, Filtrerat, or DX!) opens a context
 menu with actions such as sending the bearing to your rotor, tuning your
@@ -368,6 +404,11 @@ silently disappearing, so you can check and correct them:
   make sure the Statistics tab's Mode ▾ selection includes the same modes
   Log4OM's own report used, and check the "Aktuella"/"Aktuella +
   historiska" toggle for DXCC/QO100.
+- **No WSJT-X spots ever appear, everything else works fine:** almost
+  always a port mismatch — compare Config → WSJT-X/QO-100's UDP port
+  field against WSJT-X's own Settings → Reporting → "UDP Server port
+  number" digit for digit. A mismatch produces no error anywhere (see the
+  warning box in §3), it just silently receives nothing.
 - **"WSJT-X-paket-fel" appears in the All tab:** a single WSJT-X UDP packet
   couldn't be processed; it's logged and skipped, WSJT-X spot reception
   continues normally. If it repeats constantly, it's worth reporting (with
