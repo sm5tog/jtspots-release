@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.17.78 | Operator: SM5K / SM5TOG
+Version covered: 1.17.84 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -110,13 +110,18 @@ Choose how JTSpots controls your radio for click-to-tune: **TCI**,
 > same either way.
 
 Switching the radio interface requires restarting JTSpots before the
-Spots tab's buttons update to match (the actual tuning target changes
-immediately, but the button layout only refreshes at startup).
+Spots tab's **Waterfall ▾** button updates to match (the actual tuning
+target changes immediately, but that button's layout only refreshes at
+startup). The Radio tab's own fields (including "Use RX2" below) update
+immediately, no restart needed.
 
-**RX2 (second receiver)** is optional, TCI-only. If your SDR only has one
-receiver, uncheck "Use RX2" — everything then tunes to your single
-receiver, and the RX1/RX2 choice disappears from the right-click menu and
-the rest of the UI. If you do have a second receiver (e.g. a SunSDR2 DUO),
+**RX2 (second receiver)** is optional, TCI-only — the "Use RX2" checkbox
+and the "RX per mode" row are hidden entirely whenever Omnirig or None is
+selected, since RX1/RX2 only means something with a TCI-capable radio.
+Switch back to TCI to see them again. If your SDR only has one receiver,
+uncheck "Use RX2" — everything then tunes to your single receiver, and the
+RX1/RX2 choice disappears from the right-click menu and the rest of the
+UI. If you do have a second receiver (e.g. a SunSDR2 DUO),
 leave it checked and use the "RX per mode" row to choose which receiver
 each mode category (CW/Phone/Digital) tunes to by default — the built-in
 default sends CW/Phone to RX1 and Digital modes to RX2, matching common
@@ -363,6 +368,14 @@ silently disappearing, so you can check and correct them:
   make sure the Statistics tab's Mode ▾ selection includes the same modes
   Log4OM's own report used, and check the "Aktuella"/"Aktuella +
   historiska" toggle for DXCC/QO100.
+- **"WSJT-X-paket-fel" appears in the All tab:** a single WSJT-X UDP packet
+  couldn't be processed; it's logged and skipped, WSJT-X spot reception
+  continues normally. If it repeats constantly, it's worth reporting (with
+  the exact error text) so the underlying packet format can be fixed.
+- **"TCI-spot-fel" repeats constantly in the All tab:** the Waterfall ▾
+  checkboxes are on but Radio interface isn't set to TCI (or the TCI
+  server isn't reachable) — switch Radio interface to match what's
+  actually running, or turn the Waterfall ▾ checkboxes off.
 
 ---
 
