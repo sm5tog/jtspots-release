@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.17.86 | Operator: SM5K / SM5TOG
+Version covered: 1.19.11 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -26,7 +26,11 @@ server, exactly as if JTSpots itself were a DX cluster feed.
 You can also double-click any spot to have JTSpots tune your rig to the
 right VFO/frequency/mode and show the call in Log4OM's own window (via
 Log4OM's Remote Control interface) — without logging a QSO. This mimics
-what JTAlert does when you click a call there.
+what JTAlert does when you click a call there. For WSJT-X-sourced spots,
+double-click (or the "Call via WSJT-X" right-click option) can also tell
+WSJT-X to reply to that decode directly, exactly as if you had
+double-clicked it in WSJT-X's own Band Activity window — these calls are
+shown underlined in the DX! tab.
 
 ---
 
@@ -109,6 +113,12 @@ Telnet port, Remote Control host/port, and the database connection
 (MariaDB host/port/database/user/password, or a SQLite file path). A
 green/red indicator next to "Database type" shows whether the configured
 database is currently reachable.
+
+**"Enable Log correction QO-100"** (off by default): watches the Log4OM
+database for new QSOs on 13cm and automatically fills in `propmode=SAT`,
+`satname=QO-100`, and `satelliteqso=1` — before Log4OM's own periodic
+Clublog upload sends the row off incomplete. Polls every 5 seconds while
+enabled.
 
 ### Radio interface
 
@@ -265,6 +275,7 @@ and need no rule.
 | Min SNR | Minimum decoded SNR in dB |
 | Spotter continent / Spotter country | Restrict by where the *spotter* (not the DX station) is located |
 | Has QRZ | Optional cross-check against QRZ.com to filter out likely skimmer decoding errors (a rare miss on stations without a QRZ page is possible — keep this off calls you're specifically chasing) |
+| Popular call | Matches when 3+ (adjustable) distinct stations are calling the same target within a short window, and JTSpots has itself decoded that target's own transmission recently — a possible pileup/rare DX indicator. WSJT-X spots only, never triggered by cluster or QO-100 spots. When a rule with this condition matches, the call is shown with a "!" mark in the DX! tab. |
 
 ### Wanted calls
 
