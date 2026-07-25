@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.19.11 | Operator: SM5K / SM5TOG
+Version covered: 1.20.1 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -192,6 +192,18 @@ status line showing when it was last updated. No account or API key
 needs to be entered — the download works automatically for every
 installation.
 
+### JTAlert
+
+Optionally writes your combined wanted-calls list (both the auto-filled
+DX News list and the manual list, across all rules) to JTAlert's own
+wanted-list (`config.sqlite`, list 3), so JTAlert alerts on the same
+calls JTSpots is tracking. Off by default. The path to JTAlert's
+`config.sqlite` is auto-detected on first use (it lives under
+`%LOCALAPPDATA%\HamApps\<profile>\config\JTAlertX\`) — use "Browse..." if
+you have a non-standard install or multiple JTAlert profiles and the
+wrong one was picked. "Export now" writes immediately; once enabled, it
+also writes automatically whenever your wanted-calls list changes.
+
 ### Language
 
 Choose the UI language (Swedish or English). Takes effect after a
@@ -210,7 +222,10 @@ The Spots tab has four sub-views, shown as tabs of their own:
 - **Filtrerat (Filtered)** — only spots that passed at least one active
   rule. This is also what gets forwarded to Log4OM.
 - **DX!** — a compact view highlighting spots worth working right now
-  (colored by DXCC/DXpedition/Marathon status).
+  (colored by DXCC/DXpedition/Marathon status). A row shows `[WKD yymmdd]`
+  when it re-triggers on a "worked but not yet confirmed" basis and you
+  already worked that exact call+band on that date — a reminder before
+  you call it again.
 - **Skräp (Junk)** — spots rejected by the callsign/junk filter (see
   §10), so you can review and correct false positives.
 
