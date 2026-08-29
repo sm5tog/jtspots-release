@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.20.1 | Operator: SM5K / SM5TOG
+Version covered: 1.28.0 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -50,7 +50,7 @@ nothing needs to be created by hand.
 
 JTSpots ships with a ready-to-use starting point: a working rule set
 (ATNO, new band-country, WAS, DX Marathon, and a few example wanted-call
-rules — see §5) and one preconfigured DX cluster server (**SK4BW**,
+rules — see §6) and one preconfigured DX cluster server (**SK4BW**,
 `cluster.sk4bw.net:8000`). Fill in your own callsign in Config → DX
 Cluster before connecting to it — the callsign field ships blank on
 purpose, so you don't accidentally connect as someone else. Feel free to
@@ -66,6 +66,11 @@ The window can be resized like any other — drag any edge or corner. The
 default size may cut off some log columns depending on your screen and
 font settings; widening the window is the fix, not a sign of something
 wrong with the data.
+
+The status row at the top of the window also has a **"^" (always on top)**
+toggle (its state is remembered between runs) and an **"About..."** button
+with the version number and links to the setup guide and the project
+donation page.
 
 ### Updating
 
@@ -105,7 +110,16 @@ JTSpots needs to reach your Log4OM installation in three ways:
 
 ## 3. Configuration (Config tab)
 
-The Config tab is organized into sections. Each is described below.
+The Config tab is organized into collapsible sections. Station and Log4OM
+are always expanded; the rest start collapsed so a first run shows a short
+list of headings with a one-line explanation under each, instead of every
+field at once. Click a heading to expand or collapse it — the state is
+remembered between runs.
+
+Most fields have a hover tooltip (marked with a small "ⓘ" after the
+label). Where a field has a sensible default, the tooltip states it.
+
+Each section is described below.
 
 ### Log4OM
 
@@ -204,15 +218,61 @@ you have a non-standard install or multiple JTAlert profiles and the
 wrong one was picked. "Export now" writes immediately; once enabled, it
 also writes automatically whenever your wanted-calls list changes.
 
+**"Restart JTAlert on export"** (on by default): JTAlert keeps its own
+copy of the wanted list in memory and writes it back to `config.sqlite`
+on its next save, which would overwrite what JTSpots just wrote. To make
+the change stick, JTSpots closes JTAlert, writes the list, and starts
+JTAlert again with the exact same command line. The program path is found
+automatically from the running JTAlert process (or the "JTAlert program:"
+field, or a scan of `%ProgramFiles%\HamApps\`). Turn this off only if you
+prefer to close JTAlert yourself before every export.
+
+### Alerts
+
+A visible and audible alert when a new **DX Marathon** or **QO-100 DXCC**
+spot appears in Filtered/DX! — the two spot types most worth reacting to
+immediately.
+
+- **Sound** and **taskbar flash** checkboxes (both on by default). The
+  flash keeps blinking until the JTSpots window gets focus, and only
+  fires if JTSpots is not already the active window.
+- **Sound device** — pick a specific output so the alert plays there
+  regardless of the Windows default device or per-app mixer. "Windows
+  default device" keeps the old behaviour (follows whatever Windows has
+  set as default).
+- **"Test alert now"** runs sound + flash immediately, independent of
+  rules or DXCC status, to check the mechanism itself.
+
+**Pushover notifications** (off by default): sends a push notification to
+the Pushover app on your phone when a spot matches an alert of at least
+the urgency you choose. Requires an API token and user key from
+pushover.net (stored in plain text in the settings file). The urgency
+threshold ranges from "Operation-critical only" (alerts from a tracked
+DXpedition) through "Operation + ATNO" up to "Everything (incl. manual
+calls)". A repeat guard ("Don't notify about the same call again within N
+minutes", default 60) stops the same call+band notifying again until the
+time is up, but a band change gets you a fresh notification right away.
+All notifications go out at normal priority (one chime, no repeat,
+respects Do Not Disturb). "Test Pushover now" sends a test message with
+the saved credentials — save settings first, and check the "Alla" log for
+the result.
+
 ### Language
 
-Choose the UI language (Swedish or English). Takes effect after a
-restart is not required for most text, but a restart is recommended to
-be sure fully consistent for all elements.
+Choose the UI language (Swedish or English). Most text switches
+immediately; a restart is recommended so that everything, including
+any already-open dialogs, is consistent. As of this version every
+user-visible string in the whole program goes through the language files
+(`lang/sv.json`, `lang/en.json`), so nothing is left untranslated in
+either language.
 
 ---
 
-## 4. Main Views (Spots tab)
+## 4. Main Views
+
+The main window has five top-level tabs: **Spots**, **Timeline** (§5),
+**Rules** (§6), **Statistics** (§9), and **Config** (§3). This section
+covers the Spots tab.
 
 The Spots tab has four sub-views, shown as tabs of their own:
 
@@ -228,6 +288,16 @@ The Spots tab has four sub-views, shown as tabs of their own:
   you call it again.
 - **Skräp (Junk)** — spots rejected by the callsign/junk filter (see
   §10), so you can review and correct false positives.
+
+**Sorting the DX! view.** A **Sort ▾** button chooses the field and
+direction (time, band, call, DXCC, spotter, mode, trigger, source). A
+separate **"Opportunity sorting"** checkbox overrides that menu: when on,
+the list is ranked by the built-in DXO Opportunity score instead —
+priority tier first (an active DXpedition slot outranks an ATNO, which
+outranks a new band), then quality of the opening (how reachable and how
+fresh the spot is) within the same tier, with the most recently received
+spot last on a tie. Hover a DX! row to see the score and the reason it
+was ranked where it is.
 
 **Identifying where a spot came from:** every row ends with a bracketed
 source tag, e.g. `[WSJT-X]`, `[SK4BW]` (a DX cluster server name),
@@ -265,7 +335,30 @@ independent of your overall DXCC confirmation status.
 
 ---
 
-## 5. Rules (Rules tab)
+## 5. Timeline Tab
+
+A 30-day forward view of upcoming DXpeditions, drawn as a Gantt-style
+chart similar to dx-world.net's own timeline page, plus a text list of
+the same events below it. It is built from three of the four DX News
+sources (425 DX Bulletin, NG3K ADXO, and the DX-World timeline feed).
+
+- **Update** is manual only — there is no automatic fetch at startup.
+  The same click also refreshes the "DX" rule's auto-filled wanted-calls
+  condition (the same effect as the "DX News Union" button in the rule
+  editor).
+- **Hide special calls** filters commemorative/special-event calls out
+  of the view.
+- Each event row links to its source. Right-click a call in either the
+  chart or the list to start tracking it as a DXpedition (§7).
+
+Independently of this tab, JTSpots also refreshes the wanted-calls list
+on its own every 12 hours, and the "Alla" log then shows one line per
+source (425 DX / NG3K / DX-World / Timeline) so you can see which fetch,
+if any, failed.
+
+---
+
+## 6. Rules (Rules tab)
 
 The Rules tab holds your list of filter rules. Each rule is a named group
 of conditions (all AND-ed together, except that multiple "wanted call"
@@ -315,7 +408,7 @@ happens when a spot first arrives.
 
 ---
 
-## 6. DXpedition Tracking
+## 7. DXpedition Tracking
 
 Track a specific callsign to see every spot of it regardless of whether
 the DXCC entity is otherwise already confirmed — useful for working a
@@ -351,7 +444,7 @@ you still need for DXCC.
 
 ---
 
-## 7. DX Cluster
+## 8. DX Cluster
 
 Connect to one or more Telnet cluster servers configured in Config → DX
 Cluster. Spots received from a cluster go through the same filtering
@@ -360,7 +453,7 @@ specific callsign or text using the search field above it.
 
 ---
 
-## 8. Statistics Tab
+## 9. Statistics Tab
 
 The Statistics tab shows your full confirmation status across DXCC, WAS,
 QO100, and DX Marathon, pulled directly from your Log4OM log.
@@ -392,7 +485,7 @@ QO100, and DX Marathon, pulled directly from your Log4OM log.
 
 ---
 
-## 9. Junk Filter
+## 10. Junk Filter
 
 Rejected decodes (usually skimmer/RTTY misreads that happen to look like
 an exciting DX call) are captured in the "Skräp" (Junk) tab instead of
@@ -410,7 +503,7 @@ silently disappearing, so you can check and correct them:
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 - **Database indicator stuck or red:** check host/port/credentials (or
   SQLite file path) in Config → Log4OM. The indicator re-tests itself
@@ -446,7 +539,7 @@ silently disappearing, so you can check and correct them:
 
 ---
 
-## 11. Glossary
+## 12. Glossary
 
 | Term | Meaning |
 |---|---|
@@ -459,3 +552,5 @@ silently disappearing, so you can check and correct them:
 | ATNO/DXP1/DXP2/DXP3 | Priority tags shown on spots: brand-new band-country, worked-not-confirmed, and already-confirmed, in that priority order |
 | TCI | Expert Electronics' text-based WebSocket protocol used by SunSDR/ExpertSDR3 radios |
 | CAT | Computer-Aided Transceiver control — traditional serial/USB rig control, reached here via Omnirig |
+| DXO Opportunity | JTSpots' built-in scoring of how worth-it a spot is right now (priority tier + reachability + freshness), used to rank the DX! view when "Opportunity sorting" is on |
+| Pushover | A third-party push-notification service (pushover.net); JTSpots can send an alert to its phone app |
