@@ -1,6 +1,6 @@
 # JTSpots — User Manual
 
-Version covered: 1.28.0 | Operator: SM5K / SM5TOG
+Version covered: 1.45.0 | Operator: SM5K / SM5TOG
 
 This manual explains how to install, configure, and use JTSpots from an
 operator's point of view. For internal architecture and data formats, see
@@ -285,9 +285,42 @@ The Spots tab has four sub-views, shown as tabs of their own:
   (colored by DXCC/DXpedition/Marathon status). A row shows `[WKD yymmdd]`
   when it re-triggers on a "worked but not yet confirmed" basis and you
   already worked that exact call+band on that date — a reminder before
-  you call it again.
+  you call it again. The marker column in front of the call shows `★`
+  for a tracked DXpedition, `!` when a rule with a "Popular call"
+  condition matched, and `W` when the call is in your manual wanted list.
+  The tag at the end of a row names the reason, for example
+  `DXCC: ATNO`, `DXCC band-country: new` (this entity has never been
+  worked on this band), `DXCC band-country: wkd, not cfm` (worked on this
+  band but not yet confirmed), `WAS: new_band (FL)` (the state is shown)
+  or `Marathon: MTH_GAP` (missing from this year's Marathon).
 - **Skräp (Junk)** — spots rejected by the callsign/junk filter (see
   §10), so you can review and correct false positives.
+
+**The DXO view.** The **DXO view** checkbox above the DX! list switches
+it to a sectioned presentation. The list is built from your recent spots;
+spots older than **Show spots younger than (min) in DX!** (Rules tab,
+default 60 minutes, 0 means no limit) are left out.
+
+- **WORK NOW** — what you need right now. Every MUST row is here.
+- **WORK IF TIME PERMITS** — NICE TO HAVE rows. Click the heading to fold
+  or unfold it; folded, it shows a one-line count of opportunities.
+- **YOUR RULES** — spots matched by your own rules (§6), one row per
+  matching rule.
+
+A station gets one row per band and mode; further reasons it also counts
+for are listed in the row's hover explanation ("Also counts: ..."). Hover
+a row for a plain-language explanation of why it is placed where it is,
+including "You are watching this station" for a call in your wanted list.
+Opportunities hidden by the noise filter (for example a lone distant spot
+with no support from other stations) are counted at the bottom of the
+list. While the DXO view is on, the **Sort ▾** button is disabled.
+
+**Delete spot.** The right-click action **Delete spot** hides that
+station (call, band and mode category) for 2 hours. It comes back earlier
+if something changes: you hear it yourself (own WSJT-X decode or own
+skimmer), the need becomes more important, a spotter from a closer zone
+reports it (outside Europe, then Europe, then Nordic), the nearest spotter
+gets twice as close and is within 2500 km, or the 2 hours run out.
 
 **Sorting the DX! view.** A **Sort ▾** button chooses the field and
 direction (time, band, call, DXCC, spotter, mode, trigger, source). A
@@ -311,7 +344,25 @@ Right-clicking a spot row (in Alla, Filtrerat, or DX!) opens a context
 menu with actions such as sending the bearing to your rotor, tuning your
 rig via TCI, tracking the call as a DXpedition, adding/removing it from
 your wanted-calls list, adding it to the junk filter, or removing/
-blacklisting the row.
+blacklisting the row. The bearing entries show degrees: the normal
+great-circle bearing, **Send AZ to rotor (propagation, best ...)** and
+**(propagation, second best ...)**. The propagation bearings take the
+spot's band, time of day, aurora and polar absorption (NOAA data) and
+your antenna into account. They are for HF only, are calculated in the
+background (shown as `...` until ready) and cached for 5 minutes. The
+**AZ front/back (dB)** field in Config (default 15) sets your antenna's
+front-to-back ratio for this calculation.
+
+The counter next to the log shows `N spots · raw R/min`: N is the number
+of spots in the log, and R is the number of spots per minute arriving
+from your DX clusters before the junk and duplicate filters.
+
+**Your own hearing wins.** A spot you hear yourself (WSJT-X or your own
+skimmer) is never overwritten by a later cluster spot of the same station.
+If the station was already spotted on that band during the last 10
+minutes, a repeat hearing from your own source is no longer thrown away:
+it updates the row (once per minute at most), so the row shows your own
+source and time. No extra alert is sent for such an update.
 
 ### Info panel
 
@@ -321,7 +372,25 @@ dot = confirmed, yellow dot = worked but not confirmed) and, if the
 station is a US/Canadian call, a WAS matrix for its state right next to
 it. If the spotted call is a tracked DXpedition, a black checkmark
 appears over any cell it has already worked in that specific expedition,
-independent of your overall DXCC confirmation status.
+independent of your overall DXCC confirmation status. For a tracked
+expedition you can mark a worked slot as uncertain, either by clicking
+its cell in the matrix or with **Mark ... as uncertain** in the spot's
+right-click menu. JTSpots then treats that slot as not yet worked until a
+new QSO is logged for it; the cell shows an orange `?` and alerts for it
+are tagged `UNCERTAIN`.
+
+After the call, country and DXCC number the panel shows the DX Marathon
+status for the current year: `MTH land ✓/✗` and `zone N ✓/✗` (green =
+already counted this year, red = still missing). No Marathon label is
+shown for QO-100 spots, since satellite QSOs do not count. Next to the
+bearing button `AZ` the buttons **Best** and **Next** show the two
+propagation bearings in degrees; a click sends that bearing to your rotor.
+
+**The panel follows WSJT-X.** When the DX Call field in WSJT-X changes
+(for example when you double-click a call in WSJT-X's own window), the
+info panel shows that call exactly as if you had clicked a spot for it:
+same country, matrices and bearings. Nothing is sent to Log4OM or the
+rotor by this.
 
 ### Click-to-tune
 
@@ -367,6 +436,20 @@ if **any** enabled rule matches it, or if it is an active DXpedition not
 yet worked on that band/mode (see §7) — DXpedition matches are automatic
 and need no rule.
 
+### Base rules and your own rules
+
+The Rules tab has two parts. **Base rules** is a list of checkboxes, one
+for each kind of reason JTSpots can alert on: DXCC ATNO, DXCC new
+band-country and DXCC worked-not-confirmed (each per mode), WAS never
+worked and WAS worked-not-confirmed (per mode: CW, Phone, Digital), DX
+Marathon, Satellite and Operation (a tracked DXpedition, §7). Switch off
+what you do not chase. **Your rules** are rules you write yourself, in
+the style of HamAlert: all conditions in a rule must match (AND), several
+values inside one condition are OR-ed. Matches appear in the YOUR RULES
+section of the DX! view. The old award conditions from earlier versions
+(ATNO, New band-country, Satellite, Marathon, WAS) are converted to one
+condition, **need**, which is true when any base-rule reason applies.
+
 ### Condition types
 
 | Condition | Meaning |
@@ -409,6 +492,9 @@ happens when a spot first arrives.
 ---
 
 ## 7. DXpedition Tracking
+
+In the tracked-expedition dropdown each call is followed by the time it
+was last seen (`CALL · dd/mm HH:MM`, UTC).
 
 Track a specific callsign to see every spot of it regardless of whether
 the DXCC entity is otherwise already confirmed — useful for working a
